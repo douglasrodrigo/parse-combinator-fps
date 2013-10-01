@@ -13,7 +13,7 @@ object Parser extends RegexParsers {
   
   def time: Parser[LocalDateTime] =  """\d{2}/\d{2}/\d{4} \d{2}:\d{2}:\d{2}""".r ^^ {LocalDateTime.parse(_, dateTimeFormat) }
 
-  def timeSep = time ~ "-"
+  def timeSep = time <~ "-"
 
   def matchId = """(\d+)""".r
 
@@ -26,10 +26,10 @@ object Parser extends RegexParsers {
   def weapon: Parser[Weapon] = """(\w+)""".r ^^ { Weapon(_)}
 
   def kill: Parser[PlayerKill]  = timeSep ~ player ~ "killed" ~ player ~ "using" ~ weapon ^^ 
-    {case (time ~ _) ~ killer ~ _ ~ dead  ~ _ ~ weapon => PlayerKill(time, killer, dead, weapon)}
+    {case time ~ killer ~ _ ~ dead  ~ _ ~ weapon => PlayerKill(time, killer, dead, weapon)}
 
   def killByWorld: Parser[WorldKill]  = timeSep ~ "<WORLD> killed" ~  player ~ "by DROWN" ^^ 
-    {case (time ~ _) ~ _ ~  dead  ~ _  => WorldKill(time, dead)}
+    {case time ~ _ ~  dead  ~ _  => WorldKill(time, dead)}
 
   def kills: Parser[List[Kill]] = rep(kill | killByWorld) ^^ { (kills: List[Kill]) => kills }
 
