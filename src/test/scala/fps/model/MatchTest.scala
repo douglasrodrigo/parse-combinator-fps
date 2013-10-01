@@ -29,4 +29,12 @@ class MatchTest extends Specification {
       ranking.head.player must beEqualTo(black)
     }
   }
+
+  "winnerPreferedWeapon" should {
+
+    "be r16" in {
+      simpleMatch.winnerPreferedWeapon must beEqualTo(r16)
+    }
+  }
+
 }

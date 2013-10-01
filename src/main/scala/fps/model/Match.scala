@@ -22,6 +22,8 @@ case class Match(id: String, kills: List[Kill]) {
     def deaths = relatedDeaths size
     
     def notDiedAward = relatedDeaths isEmpty
+
+    def preferredWeapon = relatedKills.groupBy(_.weapon).mapValues(_.size).maxBy(_._2)._1
   }
 
   lazy val statistics = {
@@ -34,5 +36,6 @@ case class Match(id: String, kills: List[Kill]) {
   }
 
   def ranking = statistics.toList sortBy(_.kills) reverse
-                                                               
+  
+  def winnerPreferedWeapon = ranking.head.preferredWeapon
 }
